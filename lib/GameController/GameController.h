@@ -12,6 +12,7 @@ private:
     int _game_speed = 200;
     byte enemy_matrix[64];
     void randomInit();
+    void delete_enemy(byte index, byte color=0);
 
 
 public:
@@ -20,8 +21,12 @@ public:
     void moveUserRight();
     void shoot();
     void play();
-    void init();
+    void init(); 
+    
+    bool handleshoot(byte index);
+
     coord getUserPos();
     coord getShootPos();
     byte* get_enemy_matrix();
+
 };

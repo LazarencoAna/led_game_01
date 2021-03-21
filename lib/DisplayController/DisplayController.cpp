@@ -58,6 +58,10 @@ void DisplayController::renderGame(coord userPos, coord shootPos, byte* enemy_ma
                 leds[j] = Pink;
                 break;
             default:
+            if (shootIndex == i)
+            {
+                leds[i] = 0x00FF00;
+            }
                 break;
             }
         }

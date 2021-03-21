@@ -12,7 +12,7 @@ private:
     unsigned long _timer;
     uint8_t _brightness;
     CRGB leds[NUM_LED];
-    enum colors {Red=0xFF0000, Blue=0x0000FF, Yellow=0xFFFF00, Pink=0xFF00FF};
+    enum colors {Red=0xFF0000, Blue=0x0000FF, Yellow=0xFFFF00, Pink=0xFF00FF, Blak=0x000000};
 
 public:
     DisplayController();
