@@ -52,3 +52,21 @@ coord GameController::getUserPos()
 {
     return _userPos;
 }
+
+
+void GameController::init()
+{
+    randomInit();
+}
+
+void GameController::randomInit()
+{
+    for(int i=0;i<64;i++)
+    {
+        enemy_matrix[i]=random()%4;
+    }
+}
+byte* GameController::get_enemy_matrix()
+{
+    return enemy_matrix;
+}

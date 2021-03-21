@@ -37,5 +37,5 @@ void loop()
 {
   buttonsHandler();
   game.play();
-  display.renderGame(game.getUserPos(), game.getShootPos());
+  display.renderGame(game.getUserPos(), game.getShootPos(), game.get_enemy_matrix());
 }

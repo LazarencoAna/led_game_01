@@ -10,6 +10,9 @@ private:
     coord _minCoords;
     unsigned long _timer;
     int _game_speed = 200;
+    byte enemy_matrix[64];
+    void randomInit();
+
 
 public:
     GameController(coord maxCoords, coord minCoords, int gameSpeed);
@@ -17,6 +20,8 @@ public:
     void moveUserRight();
     void shoot();
     void play();
+    void init();
     coord getUserPos();
     coord getShootPos();
+    byte* get_enemy_matrix();
 };

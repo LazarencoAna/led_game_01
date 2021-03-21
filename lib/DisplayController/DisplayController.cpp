@@ -9,18 +9,18 @@ void DisplayController::init()
     delay(200);
 }
 
- int getIndex(int _x, int _y)
+byte getIndex(byte _x, byte _y)
+{
+    _x = 15 - _x;
+    _y = 15 - _y;
+    if (_y % 2 != 0)
     {
-        _x=15-_x;
-        _y=15-_y;
-        if (_y%2!=0)
-        {
-            return (15-_x)+_y*16;
-        }
-    return _x+_y*16;  
+        return (15 - _x) + _y * 16;
     }
+    return _x + _y * 16;
+}
 
-void DisplayController::renderGame(coord userPos, coord shootPos)
+void DisplayController::renderGame(coord userPos, coord shootPos, byte* enemy_matrix)
 {
     if (millis() - _timer > RENDER_SPEED)
     {
@@ -30,18 +30,38 @@ void DisplayController::renderGame(coord userPos, coord shootPos)
         int userIndex = getIndex(userPos.x, userPos.y);
         int shootIndex = getIndex(shootPos.x, shootPos.y);
 
-        for (int i = NUM_LED - 1; i >= 0; i--)
+        for (int i = NUM_LED - 1; i >= 64; i--)
         {
             if (userIndex == i)
             {
                 leds[i] = 0x00FF00;
             }
-            if ( shootIndex==i)
+            if (shootIndex == i)
             {
                 leds[i] = 0x00FF00;
             }
         }
+        for (int i = 0; i < 64; i++)
+        {
+            switch (enemy_matrix[i])
+            {
+            case 0:
+                leds[i] = Red;
+                break;
+            case 1:
+                leds[i] = Blue;
+                break;
+            case 2:
+                leds[i] = Yellow;
+                break;
+            case 3:
+                leds[i] = Pink;
+                break;
+            default:
+                break;
+            }
+        }
+
         FastLED.show();
     }
-    
 }
