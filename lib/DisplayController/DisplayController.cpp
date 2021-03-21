@@ -29,7 +29,6 @@ void DisplayController::renderGame(coord userPos, coord shootPos, byte* enemy_ma
 
         int userIndex = getIndex(userPos.x, userPos.y);
         int shootIndex = getIndex(shootPos.x, shootPos.y);
-
         for (int i = NUM_LED - 1; i >= 64; i--)
         {
             if (userIndex == i)
@@ -43,19 +42,20 @@ void DisplayController::renderGame(coord userPos, coord shootPos, byte* enemy_ma
         }
         for (int i = 0; i < 64; i++)
         {
+            byte j= getIndex(i%16,15-i/16);
             switch (enemy_matrix[i])
             {
             case 0:
-                leds[i] = Red;
+                leds[j] = Red;
                 break;
             case 1:
-                leds[i] = Blue;
+                leds[j] = Blue;
                 break;
             case 2:
-                leds[i] = Yellow;
+                leds[j] = Yellow;
                 break;
             case 3:
-                leds[i] = Pink;
+                leds[j] = Pink;
                 break;
             default:
                 break;
