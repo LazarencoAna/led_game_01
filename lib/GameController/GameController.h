@@ -11,9 +11,11 @@ private:
     unsigned long _timer;
     int _game_speed = 200;
     byte enemy_matrix[64];
+     bool visited[4][16];
     void randomInit();
     void delete_enemy(byte index, byte color=0);
-
+    void a( );
+    void dfs();
 
 public:
     GameController(coord maxCoords, coord minCoords, int gameSpeed);
@@ -22,7 +24,7 @@ public:
     void shoot();
     void play();
     void init(); 
-    
+
     bool handleshoot(byte index);
 
     coord getUserPos();
