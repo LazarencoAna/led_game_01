@@ -12,7 +12,7 @@
 Button leftBtn(leftBtnPin);
 Button rightBtn(rightBtnPin);
 Button shootBtn(shootBtnPin);
-GameController game({15, 15}, {0, 0}, 150);
+GameController game(0, {15, 15}, {0, 0}, 150);
 DisplayController display;
 
 void setup()

@@ -1,24 +1,13 @@
 #include <Coord.h>
 #include <Arduino.h>
+#include <GameShooter.h>
 
 class GameController
 {
 private:
-    coord _userPos;
-    coord _shootPos;
-    coord _maxCoords;
-    coord _minCoords;
-    unsigned long _timer;
-    int _game_speed = 200;
-    byte enemy_matrix[64];
-     bool visited[4][16];
-    void randomInit();
-    void delete_enemy(byte index, byte color=0);
-    void a( );
-    void dfs();
-
+    GameShooter  myGame;
 public:
-    GameController(coord maxCoords, coord minCoords, int gameSpeed);
+    GameController(int index,coord maxCoords, coord minCoords, int gameSpeed);// modificam 
     void moveUserLeft();
     void moveUserRight();
     void shoot();
