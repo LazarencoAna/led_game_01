@@ -18,7 +18,7 @@ void JoyStick::lisen()
 
 boolean JoyStick::isTop()
 {
-    if (mapY > -2 && millis() - _joyTimer > debounce)
+    if (mapY > 2 && millis() - _joyTimer > debounce)
     {
         _joyTimer = millis();
         return true;
@@ -48,8 +48,10 @@ boolean JoyStick::isRight()
 
 boolean JoyStick::isLeft()
 {
-    if (mapX > -2 && millis() - _joyTimer > debounce)
+    if ((mapX > 2) && (millis() - _joyTimer) > debounce)
     {
+            Serial.println(mapX);
+    Serial.println(_joyTimer);
         _joyTimer = millis();
         return true;
     }

@@ -36,4 +36,5 @@ void loop()
   buttonsHandler();
   game.play();
   display.renderGame(game.getUserPos(), game.getShootPos(), game.get_enemy_matrix());
+  joyStick.lisen();
 }
