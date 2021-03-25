@@ -1,12 +1,57 @@
 #include <JoyStick.h>
 
-JoyStick::JoyStick(uint8_t vrx, uint8_t vry, uint8_t sw)
+JoyStick::JoyStick(uint8_t vrx, uint8_t vry, uint8_t sw) : Button(sw)
 {
     _VRx = vrx;
     _VRy = vry;
-    _SW = sw;
-
-    pinMode(_VRx, INPUT);
-    pinMode(_VRy, INPUT);
-    pinMode(_SW, INPUT_PULLUP);
+    pinMode(vrx, INPUT);
+    pinMode(vry, INPUT);
 };
+
+void JoyStick::lisen()
+{
+    xPosition = analogRead(_VRx);
+    yPosition = analogRead(_VRy);
+    mapX = map(xPosition, 0, 1023, -10, 10);
+    mapY = map(yPosition, 0, 1023, -10, 10);
+}
+
+boolean JoyStick::isTop()
+{
+    if (mapY > -2 && millis() - _joyTimer > debounce)
+    {
+        _joyTimer = millis();
+        return true;
+    }
+    return false;
+}
+
+boolean JoyStick::isBottom()
+{
+    if (mapY < -2 && millis() - _joyTimer > debounce)
+    {
+        _joyTimer = millis();
+        return true;
+    }
+    return false;
+}
+
+boolean JoyStick::isRight()
+{
+    if (mapX < -2 && millis() - _joyTimer > debounce)
+    {
+        _joyTimer = millis();
+        return true;
+    }
+    return false;
+}
+
+boolean JoyStick::isLeft()
+{
+    if (mapX > -2 && millis() - _joyTimer > debounce)
+    {
+        _joyTimer = millis();
+        return true;
+    }
+    return false;
+}

@@ -1,21 +1,22 @@
 #include <Arduino.h>
+#include <Button.h>
 
-class JoyStick
+class JoyStick : public Button
 {
 private:
-    uint8_t _VRx;
-    uint8_t _VRy;
-    uint8_t _SW;
-    int xPos = 0;
-    int yPos = 0;
-    int SW_state = 0;
+    int xPosition = 0;
+    int yPosition = 0;
     int mapX = 0;
     int mapY = 0;
-    void init();
+    uint8_t _VRx;
+    uint8_t _VRy;
+    unsigned long _joyTimer;
 
 public:
-    JoyStick(uint8_t vrx, uint8_t vry, uint8_t sw);   
+    JoyStick(uint8_t vrx, uint8_t vry, uint8_t sw) : Button(sw){};
     boolean isRight();
     boolean isLeft();
-    boolean isPressed();
+    boolean isTop();
+    boolean isBottom();
+    void lisen();
 };
