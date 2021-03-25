@@ -1,19 +1,16 @@
 #include "FastLED.h"
-#include <Button.h>
 #include <Coord.h>
 #include <GameController.h>
 #include <DisplayController.h>
+#include <JoyStick.h>
 
-
-#define leftBtnPin 3
-#define rightBtnPin 4
 #define shootBtnPin 6
+#define xPin A0
+#define yPin A1
 
-Button leftBtn(leftBtnPin);
-Button rightBtn(rightBtnPin);
-Button shootBtn(shootBtnPin);
-GameController game(0, {15, 15}, {0, 0}, 150);
+GameController game(0,{15, 15}, {0, 0}, 150);
 DisplayController display;
+JoyStick joyStick(xPin,yPin,shootBtnPin);
 
 void setup()
 {
@@ -24,13 +21,13 @@ void setup()
 
 void buttonsHandler()
 {
-  if (leftBtn.isPressed())
+  if (joyStick.isLeft())
     game.moveUserLeft();
 
-  if (rightBtn.isPressed())
+  if (joyStick.isRight())
     game.moveUserRight();
 
-  if (shootBtn.isPressed())
+  if (joyStick.isPressed())
     game.shoot();
 }
 
@@ -39,4 +36,5 @@ void loop()
   buttonsHandler();
   game.play();
   display.renderGame(game.getUserPos(), game.getShootPos(), game.get_enemy_matrix());
+  joyStick.lisen();
 }
