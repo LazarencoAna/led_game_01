@@ -1,6 +1,6 @@
 #include <BaseGame.h>
 
-class GameShooter: public BaseGame
+class GameShooter: virtual public BaseGame
 {
     coord _userPos;
     coord _shootPos;

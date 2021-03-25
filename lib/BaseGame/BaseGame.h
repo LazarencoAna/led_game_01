@@ -16,16 +16,16 @@ public:
         _minCoords = minCoords;
         _game_speed = gameSpeed;
     }
-    virtual void Left();
-    virtual void Right();
-    virtual void Top();
-    virtual void Bottom();
-    virtual void init();
-    virtual void play();
-    virtual byte *getStateList();
+    virtual void Left(){}
+    virtual void Right(){}
+    virtual void Top(){}
+    virtual void Bottom(){}
+    virtual void init(){}
+    virtual void play(){}
+    virtual byte *getStateList(){return nullptr;}
 
 
     //sterge 
-     virtual coord getShootPos();
-     virtual coord getUserPos();
+     virtual coord getShootPos(){return {0,0};}
+     virtual coord getUserPos(){return {0,0};}
 };

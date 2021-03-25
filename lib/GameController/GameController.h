@@ -5,7 +5,7 @@
 class GameController
 {
 private:
-    GameShooter  myGame;
+    BaseGame*  myGame;
 public:
     GameController(int index,coord maxCoords, coord minCoords, int gameSpeed);// modificam 
     void moveUserLeft();
