@@ -20,8 +20,9 @@ byte getIndex(byte _x, byte _y)
     return _x + _y * 16;
 }
 
-void DisplayController::renderGame(coord userPos, coord shootPos, byte* enemy_matrix)
+void DisplayController::renderGame(coord userPos, coord shootPos, byte *enemy_matrix)
 {
+
     if (millis() - _timer > RENDER_SPEED)
     {
         FastLED.clear();
@@ -34,15 +35,19 @@ void DisplayController::renderGame(coord userPos, coord shootPos, byte* enemy_ma
             if (userIndex == i)
             {
                 leds[i] = 0x00FF00;
-            }
+            }else
             if (shootIndex == i)
             {
                 leds[i] = 0x00FF00;
+            }else 
+            {
+                leds[i] = 0x000000;
             }
         }
+
         for (int i = 0; i < 64; i++)
         {
-            byte j= getIndex(i%16,15-i/16);
+            byte j = getIndex(i % 16, 15 - i / 16);
             switch (enemy_matrix[i])
             {
             case 0:
@@ -57,11 +62,14 @@ void DisplayController::renderGame(coord userPos, coord shootPos, byte* enemy_ma
             case 3:
                 leds[j] = Pink;
                 break;
+            case 4:
+                if (shootIndex == i && shootPos.y != -1)
+                {
+                    leds[i] = 0x00FF00;
+                }
+                break;
             default:
-            if (shootIndex == i)
-            {
-                leds[i] = 0x00FF00;
-            }
+                leds[i] = 0x000000;
                 break;
             }
         }
