@@ -1,16 +1,20 @@
 #include <BaseGame.h>
 
-class GameShooter: virtual public BaseGame
+#define NUMBER_OF_LINE 6
+#define LINE_SIZE 16 
+
+class GameShooter:  public BaseGame
 {
     coord _userPos;
     coord _shootPos;
  
-    byte enemy_matrix[64]; //trebuiesc modificate
-    bool visited[4][16];   //trebuiesc modificate
+    byte enemy_matrix[NUMBER_OF_LINE * LINE_SIZE]; //trebuiesc modificate
+    bool visited[NUMBER_OF_LINE] [ LINE_SIZE]; 
+    
 
     void randomInit();   //trebuie modificat  generalizat, de dat nr de randuri care va aloca si mem  enemy_matrix si visited
     void deleteEnemy(byte index, byte color);
-    void dfs();
+    bool dfs();
     void a();
     bool handleshoot(byte index);
 

@@ -1,4 +1,5 @@
 #include <DisplayController.h>
+#include <GameShooter.h>
 
 DisplayController::DisplayController(){};
 
@@ -11,13 +12,13 @@ void DisplayController::init()
 
 byte getIndex(byte _x, byte _y)
 {
-    _x = 15 - _x;
-    _y = 15 - _y;
+    _x = LINE_SIZE-1 - _x;
+    _y = LINE_SIZE-1  - _y;
     if (_y % 2 != 0)
     {
-        return (15 - _x) + _y * 16;
+        return (LINE_SIZE-1 - _x) + _y * LINE_SIZE;
     }
-    return _x + _y * 16;
+    return _x + _y * LINE_SIZE;
 }
 
 void DisplayController::renderGame(coord userPos, coord shootPos, byte *enemy_matrix)
@@ -30,7 +31,7 @@ void DisplayController::renderGame(coord userPos, coord shootPos, byte *enemy_ma
 
         int userIndex = getIndex(userPos.x, userPos.y);
         int shootIndex = getIndex(shootPos.x, shootPos.y);
-        for (int i = NUM_LED - 1; i >= 64; i--)
+        for (int i = NUM_LED - 1; i >= NUMBER_OF_LINE * LINE_SIZE; i--)
         {
             if (userIndex == i)
             {
@@ -45,9 +46,9 @@ void DisplayController::renderGame(coord userPos, coord shootPos, byte *enemy_ma
             }
         }
 
-        for (int i = 0; i < 64; i++)
+        for (int i = 0; i < NUMBER_OF_LINE * LINE_SIZE; i++)
         {
-            byte j = getIndex(i % 16, 15 - i / 16);
+            byte j = getIndex(i % LINE_SIZE, LINE_SIZE-1 - i / LINE_SIZE);
             switch (enemy_matrix[i])
             {
             case 0:
@@ -63,9 +64,9 @@ void DisplayController::renderGame(coord userPos, coord shootPos, byte *enemy_ma
                 leds[j] = Pink;
                 break;
             case 4:
-                if (shootIndex == i && shootPos.y != -1)
+                if (shootIndex == j && shootPos.y != -1)
                 {
-                    leds[i] = 0x00FF00;
+                    leds[j] = 0x00FF00;
                 }
                 break;
             default:

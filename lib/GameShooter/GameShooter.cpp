@@ -1,9 +1,11 @@
 #include <GameShooter.h>
+#include <MemoryFree.h>
 
-GameShooter::GameShooter(coord maxCoords, coord minCoords, int gameSpeed) :BaseGame(maxCoords, minCoords, gameSpeed)
+GameShooter::GameShooter(coord maxCoords, coord minCoords, int gameSpeed) : BaseGame(maxCoords, minCoords, gameSpeed)
 {
     _userPos = {0, 0};
     _shootPos = {-1, -1};
+  
 };
 
 void GameShooter::Left()
@@ -31,7 +33,7 @@ void GameShooter::init()
 
 void GameShooter::randomInit()
 {
-    for (int i = 0; i < 64; i++)
+    for (int i = 0; i < NUMBER_OF_LINE * LINE_SIZE; i++)
     {
         enemy_matrix[i] = random() % 4;
     }
@@ -43,18 +45,18 @@ byte *GameShooter::getStateList()
 
 void GameShooter::deleteEnemy(byte index, byte color)
 {
-    if (index >= 64)
+    if (index >= NUMBER_OF_LINE * LINE_SIZE)
         return;
     if (enemy_matrix[index] != color)
         return;
     enemy_matrix[index] = 4;
-    if (index > 15)
-        deleteEnemy(index - 16, color);
-    if (index % 16 > 0)
+    if (index > LINE_SIZE - 1)
+        deleteEnemy(index - LINE_SIZE, color);
+    if (index % LINE_SIZE > 0)
         deleteEnemy(index - 1, color);
-    if (index % 16 < 15)
+    if (index % LINE_SIZE < LINE_SIZE - 1)
         deleteEnemy(index + 1, color);
-    deleteEnemy(index + 16, color);
+    deleteEnemy(index + LINE_SIZE, color);
 }
 
 void GameShooter::play()
@@ -68,7 +70,7 @@ void GameShooter::play()
         if (_shootPos.y > -1)
         {
             _shootPos.y++;
-            if (handleshoot(_shootPos.x + (15 - _shootPos.y) * 16))
+            if (handleshoot(_shootPos.x + (LINE_SIZE - 1 - _shootPos.y) * LINE_SIZE))
             {
 
                 _shootPos.y = -1;
@@ -79,18 +81,16 @@ void GameShooter::play()
     }
 }
 
-
-
-
 boolean ok(int r, int c)
 {
-    return r >= 0 && r < 4 && c >= 0 && c < 16;
+    return r >= 0 && r < NUMBER_OF_LINE && c >= 0 && c < LINE_SIZE;
 }
 
-void GameShooter::dfs()
+bool GameShooter::dfs()
 {
     bool ok = 1;
-    for (int i = 0; i < 16; i++)
+    bool ok2 = 0;
+    for (int i = 0; i < LINE_SIZE; i++)
     {
         if (enemy_matrix[i] != 4)
             visited[0][i] = true;
@@ -98,65 +98,88 @@ void GameShooter::dfs()
     while (ok)
     {
         ok = 0;
-        for (int i = 0; i < 16; i++)
-            for (int j = 1; j < 4; j++)
+        for (int i = 0; i < LINE_SIZE; i++)
+            for (int j = 1; j < NUMBER_OF_LINE; j++)
             {
-                if (enemy_matrix[i + j * 16] != 4 && visited[j - 1][i]&&!visited[j][i])
-                    {visited[j][i] = true;
-                ok = 1;}
+                if (enemy_matrix[i + j * LINE_SIZE] != 4 && visited[j - 1][i] && !visited[j][i])
+                {
+                    visited[j][i] = true;
+                    ok = 1;
+                }
             }
-        for (int i = 0; i < 16; i++)
-            for (int j = 1; j < 4; j++)
+        for (int i = 0; i < LINE_SIZE; i++)
+            for (int j = 1; j < NUMBER_OF_LINE; j++)
             {
-                if (enemy_matrix[i + j * 16] != 4&&!visited[j][i])
-                   {
-                       if (i > 0)
+                if (enemy_matrix[i + j * LINE_SIZE] != 4 && !visited[j][i])
+                {
+                    if (i > 0)
                     {
 
                         if (visited[j][i - 1])
-                          {  visited[j][i] = true;
-                        ok = 1;}
+                        {
+                            visited[j][i] = true;
+                            ok = 1;
+                        }
                     }
-                     if (i  <15)
+                    if (i < LINE_SIZE - 1)
                     {
 
                         if (visited[j][i + 1])
-                           { visited[j][i] = true;
-                        ok = 1;}
+                        {
+                            visited[j][i] = true;
+                            ok = 1;
+                        }
                     }
-                   } 
+                }
             }
-        for (int i = 0; i < 16; i++)
-            for (int j = 1; j < 3; j++)
+        for (int i = 0; i < LINE_SIZE; i++)
+            for (int j = 1; j < NUMBER_OF_LINE - 1; j++)
             {
-                if (enemy_matrix[i + j * 16] != 4 && visited[j +1][i]&&!visited[j][i])
-                   { visited[j][i] = true;
-                ok = 1;}
+                if (enemy_matrix[i + j * LINE_SIZE] != 4 && visited[j + 1][i] && !visited[j][i])
+                {
+                    visited[j][i] = true;
+                    ok = 1;
+                }
             }
+        if (ok)
+            ok2 = true;
     }
+    if (!ok2)
+    {
+        return false;
+    }
+    return true;
 }
 
 void GameShooter::a()
 {
 
-    for (int i = 0; i < 64; i++)
+    for (int i = 0; i < NUMBER_OF_LINE * LINE_SIZE; i++)
     {
-            visited[i / 16][i % 16] = false;
+        visited[i / LINE_SIZE][i % LINE_SIZE] = false;
     }
-    dfs(); 
+    Serial.println(freeMemory());
+    if (dfs())
 
-    for (int i = 0; i < 64; i++)
-    {
-        if (!visited[i / 16][i % 16] && enemy_matrix[i] != 4)
+        for (int i = 0; i < NUMBER_OF_LINE * LINE_SIZE; i++)
         {
-            enemy_matrix[i] = 4;
+            if (!visited[i / LINE_SIZE][i % LINE_SIZE] && enemy_matrix[i] != 4)
+            {
+                enemy_matrix[i] = 4;
+            }
         }
+    else
+    {
+       // delete[] visited;
+        Serial.println(freeMemory());
+        Serial.println("da");
+
     }
 }
 
 bool GameShooter::handleshoot(byte index)
 {
-    if (index < 64)
+    if (index < NUMBER_OF_LINE * LINE_SIZE)
     {
         if (enemy_matrix[index] != 4)
         {
