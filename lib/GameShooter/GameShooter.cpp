@@ -5,7 +5,6 @@ GameShooter::GameShooter(coord maxCoords, coord minCoords, int gameSpeed) : Base
 {
     _userPos = {0, 0};
     _shootPos = {-1, -1};
-  
 };
 
 void GameShooter::Left()
@@ -86,71 +85,6 @@ boolean ok(int r, int c)
     return r >= 0 && r < NUMBER_OF_LINE && c >= 0 && c < LINE_SIZE;
 }
 
-bool GameShooter::dfs()
-{
-    bool ok = 1;
-    bool ok2 = 0;
-    for (int i = 0; i < LINE_SIZE; i++)
-    {
-        if (enemy_matrix[i] != 4)
-            visited[0][i] = true;
-    }
-    while (ok)
-    {
-        ok = 0;
-        for (int i = 0; i < LINE_SIZE; i++)
-            for (int j = 1; j < NUMBER_OF_LINE; j++)
-            {
-                if (enemy_matrix[i + j * LINE_SIZE] != 4 && visited[j - 1][i] && !visited[j][i])
-                {
-                    visited[j][i] = true;
-                    ok = 1;
-                }
-            }
-        for (int i = 0; i < LINE_SIZE; i++)
-            for (int j = 1; j < NUMBER_OF_LINE; j++)
-            {
-                if (enemy_matrix[i + j * LINE_SIZE] != 4 && !visited[j][i])
-                {
-                    if (i > 0)
-                    {
-
-                        if (visited[j][i - 1])
-                        {
-                            visited[j][i] = true;
-                            ok = 1;
-                        }
-                    }
-                    if (i < LINE_SIZE - 1)
-                    {
-
-                        if (visited[j][i + 1])
-                        {
-                            visited[j][i] = true;
-                            ok = 1;
-                        }
-                    }
-                }
-            }
-        for (int i = 0; i < LINE_SIZE; i++)
-            for (int j = 1; j < NUMBER_OF_LINE - 1; j++)
-            {
-                if (enemy_matrix[i + j * LINE_SIZE] != 4 && visited[j + 1][i] && !visited[j][i])
-                {
-                    visited[j][i] = true;
-                    ok = 1;
-                }
-            }
-        if (ok)
-            ok2 = true;
-    }
-    if (!ok2)
-    {
-        return false;
-    }
-    return true;
-}
-
 void GameShooter::a()
 {
 
@@ -159,22 +93,15 @@ void GameShooter::a()
         visited[i / LINE_SIZE][i % LINE_SIZE] = false;
     }
     Serial.println(freeMemory());
-    if (dfs())
-
-        for (int i = 0; i < NUMBER_OF_LINE * LINE_SIZE; i++)
+    for(int i=0;i<LINE_SIZE;i++)
+       DFS_Iterative(i);
+    for (int i = 0; i < NUMBER_OF_LINE * LINE_SIZE; i++)
         {
             if (!visited[i / LINE_SIZE][i % LINE_SIZE] && enemy_matrix[i] != 4)
             {
                 enemy_matrix[i] = 4;
             }
         }
-    else
-    {
-       // delete[] visited;
-        Serial.println(freeMemory());
-        Serial.println("da");
-
-    }
 }
 
 bool GameShooter::handleshoot(byte index)
@@ -199,4 +126,70 @@ coord GameShooter::getShootPos()
 coord GameShooter::getUserPos()
 {
     return _userPos;
+}
+ std::set<std::pair<std::pair<byte,byte>,byte>> GameShooter::get_StateList()
+{
+    std::set<std::pair<std::pair<byte,byte>,byte>> newVector;
+    coord _x;
+    bool ok=0;
+    for (int i = 0; i < NUMBER_OF_LINE * LINE_SIZE; i++)
+    {
+        if (enemy_matrix[i] != 4){
+            _x.x=i % LINE_SIZE;
+            _x.y= i / LINE_SIZE;
+            newVector.insert(std::make_pair(std::make_pair(i % LINE_SIZE,i / LINE_SIZE),enemy_matrix[i] ));
+           
+        }
+        if(!ok)
+        {
+            newVector.insert(std::make_pair(std::make_pair(1,1), 3));
+            ok=1;
+        }
+    }
+     
+    newVector.insert(std::make_pair(std::make_pair(_userPos.x,_userPos.y), 3));
+    if (_shootPos.y!=-1)
+       newVector.insert(std::make_pair(std::make_pair(_shootPos.x,_shootPos.y), 3));
+    return newVector;
+}
+
+void GameShooter::DFS_Iterative(byte src)
+{
+    std::stack<byte> stk;
+    visited[0][src] = true;
+    stk.push(src);
+    byte j = 0;
+
+    while (!stk.empty())
+    {
+        src = stk.top() % LINE_SIZE;
+        j = stk.top() / LINE_SIZE;
+        stk.pop();
+        visited[0][src] = true;
+        if (j < NUMBER_OF_LINE - 1)
+            if (!visited[j + 1][src]&&enemy_matrix[(j + 1) * LINE_SIZE + src]!=4)
+            {
+                visited[j + 1][src] = true;
+                stk.push((j + 1) * LINE_SIZE + src);
+            }
+        if (src < LINE_SIZE - 1 )
+            if (!visited[j][src + 1]&&enemy_matrix[j * LINE_SIZE + src + 1]!=4)
+            {
+                visited[j][src + 1] = true;
+                stk.push(j * LINE_SIZE + src + 1);
+            }
+        if (j > 0)
+            if (!visited[j - 1][src]&&enemy_matrix[(j - 1) * LINE_SIZE + src]!=4)
+            {
+                visited[j - 1][src] = true;
+                stk.push((j - 1) * LINE_SIZE + src);
+            }
+        if (src > 0)
+            if (!visited[j][src - 1]&&enemy_matrix[j * LINE_SIZE + src - 1]!=4)
+            {
+                visited[j][src - 1] = true;
+                stk.push(j * LINE_SIZE + src - 1);
+            }
+
+    }
 }

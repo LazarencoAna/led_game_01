@@ -43,9 +43,9 @@ coord GameController::getUserPos()
     return myGame->getUserPos();
 }
 
-byte *GameController::get_enemy_matrix()
+ std::set<std::pair<std::pair<byte,byte>,byte>> GameController::get_enemy_matrix()
 {
-    return myGame->getStateList();
+    return myGame->get_StateList();
 }
 
 

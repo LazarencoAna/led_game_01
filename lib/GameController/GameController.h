@@ -18,6 +18,10 @@ public:
 
     coord getUserPos();
     coord getShootPos();
-    byte* get_enemy_matrix();
+    std::set<std::pair<std::pair<byte,byte>,byte>> get_enemy_matrix();
+    byte* get_enemy_matri()
+    {
+        return myGame->getStateList();
+    }
 
 };

@@ -12,10 +12,11 @@ private:
     unsigned long _timer;
     uint8_t _brightness;
     CRGB leds[NUM_LED];
-    enum colors {Red=0xFF0000, Blue=0x0000FF, Yellow=0xFFFF00, Pink=0xFF00FF, Blak=0x000000};
+    enum colors {Red=0xFF0000, Blue=0x0000FF, Yellow=0xFFFF00, Pink=0xFF00FF, Blak=0x000000, Green=0x00FF00};
 
 public:
     DisplayController();
     void init();
     void renderGame(coord userPos, coord shootPos, byte* enemy_matrix );
+    void Display( std::set<std::pair<std::pair<byte,byte>,byte>> matrix);
 };

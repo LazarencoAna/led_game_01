@@ -1,5 +1,5 @@
 #include <Coord.h>
-#include <Arduino.h>
+#include <ArduinoSTL.h>
 
 class BaseGame
 {
@@ -23,6 +23,7 @@ public:
     virtual void init(){}
     virtual void play(){}
     virtual byte *getStateList(){return nullptr;}
+    virtual std::set<std::pair<std::pair<byte,byte>,byte>> get_StateList() {    }
 
 
     //sterge 
